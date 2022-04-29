@@ -31,14 +31,17 @@ def get_all_planets():
                 "diameter_km": planet.diameter_km
             }
         )
-    return jsonify(response)
+    # pdb.set_trace()
+    return response
 
 @planets_bp.route("/<planet_id>", methods=["GET"])
 def get_one_planet(planet_id):
+    # create helper function to validate planets
     try:
         planet_id = int(planet_id)
     except ValueError:
         return jsonify({"Message": f"Planet ID {planet_id} is invalid. ID must be integer"}), 400
+
     chosen_planet = None
     planets = Planet.query.all()
     for planet in planets:
@@ -51,4 +54,3 @@ def get_one_planet(planet_id):
             }
     if chosen_planet is None:
         return jsonify({"Message":f"Planet {planet_id} not found."}), 404
-    return jsonify(chosen_planet)
