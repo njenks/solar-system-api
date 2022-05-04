@@ -17,6 +17,7 @@ def validate_planet(planet_id):
     
     return planet
 
+
 @planets_bp.route("", methods=["POST"])
 def create_planet():
     request_body = request.get_json()
@@ -32,8 +33,15 @@ def create_planet():
 
 @planets_bp.route("", methods=["GET"])
 def get_all_planets(): 
+    params = request.args
+    if "name" in params or "diameter_km" in params: 
+        planet_name = params["name"]
+        planet_diameter = params["diameter_km"]
+        planets = Planet.query.filter_by(name=planet_name)
+        planets = Planet.query.filter_by(diameter_km=planet_diameter)
+    else:
+        planets = Planet.query.all()
     response = []
-    planets = Planet.query.all()
     for planet in planets:
         response.append(
             {
